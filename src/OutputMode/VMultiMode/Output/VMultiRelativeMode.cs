@@ -1,3 +1,4 @@
+using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Platform.Pointer;
@@ -9,7 +10,7 @@ namespace VoiDPlugins.OutputMode
     public class VMultiRelativeMode : RelativeOutputMode
     {
         private VMultiRelativePointer? _pointer;
-
+        private readonly DummyRelativePointer _dummyPointer = new();
         public override TabletReference Tablet
         {
             get => base.Tablet;
@@ -22,7 +23,14 @@ namespace VoiDPlugins.OutputMode
 
         public override IRelativePointer Pointer
         {
-            get => _pointer!;
+            get {
+                if (_pointer != null)
+                {
+                    return _pointer;
+                }
+                Log.Write("Windows Ink", "Pointer reference not available, returning dummy");
+                return _dummyPointer;
+            }
             set { }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.DependencyInjection;
 using OpenTabletDriver.Plugin.Output;
@@ -12,6 +13,7 @@ namespace VoiDPlugins.OutputMode
     public class VMultiAbsoluteMode : AbsoluteOutputMode
     {
         private VMultiAbsolutePointer? _pointer;
+        private readonly DummyAbsolutePointer _dummyPointer = new();
         private IVirtualScreen? _virtualScreen;
 
         [Resolved]
@@ -32,7 +34,14 @@ namespace VoiDPlugins.OutputMode
 
         public override IAbsolutePointer Pointer
         {
-            get => _pointer!;
+            get {
+                if (_pointer != null)
+                {
+                    return _pointer;
+                }
+                Log.Write("Windows Ink", "Pointer reference not available, returning dummy");
+                return _dummyPointer;
+            }
             set { }
         }
     }
