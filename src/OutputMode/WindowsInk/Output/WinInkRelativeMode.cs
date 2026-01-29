@@ -1,4 +1,5 @@
 using System;
+using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.DependencyInjection;
 using OpenTabletDriver.Plugin.Output;
@@ -12,6 +13,7 @@ namespace VoiDPlugins.OutputMode
     public class WinInkRelativeMode : RelativeOutputMode
     {
         private WinInkRelativePointer? _pointer;
+        private readonly DummyRelativePointer _dummyPointer = new();
         private IVirtualScreen? _virtualScreen;
 
         [Property("Sync")]
@@ -46,7 +48,14 @@ namespace VoiDPlugins.OutputMode
 
         public override IRelativePointer Pointer
         {
-            get => _pointer!;
+            get {
+                if (_pointer != null)
+                {
+                    return _pointer;
+                }
+                Log.Write("Windows Ink", "Pointer reference not available, returning dummy");
+                return _dummyPointer;
+            }
             set { }
         }
     }

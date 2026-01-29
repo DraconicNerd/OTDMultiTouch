@@ -2,7 +2,7 @@
 
 orig_pwd=$(pwd)
 config="Release"
-framework="net6.0"
+framework="net8.0"
 output="./build"
 declare -a extra_options
 dry_run="false"
@@ -107,6 +107,8 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+mkdir -p build
 
 clean_output
 
